@@ -15,5 +15,6 @@ jobs:
         env:
           TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
         run: |
+          uv run python src/db.py
           uv run python src/universe.py
           uv run python src/snapshot.py
