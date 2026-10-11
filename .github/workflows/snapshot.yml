@@ -1,7 +1,7 @@
 name: Daily snapshot
 
 on:
-  workflow_dispatch:   # run by hand from the Actions tab
+  workflow_dispatch:
 
 jobs:
   snapshot:
@@ -11,6 +11,14 @@ jobs:
 
       - uses: astral-sh/setup-uv@v5
 
+      - name: Restore database
+        uses: actions/cache/restore@v4
+        with:
+          path: data/market_watch.db
+          key: market-watch-db-${{ github.run_id }}
+          restore-keys: |
+            market-watch-db-
+
       - name: Run snapshot
         env:
           TMDB_TOKEN: ${{ secrets.TMDB_TOKEN }}
@@ -18,3 +26,10 @@ jobs:
           uv run python src/db.py
           uv run python src/universe.py
           uv run python src/snapshot.py
+
+      - name: Save database
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/market_watch.db
+          key: market-watch-db-${{ github.run_id }}
