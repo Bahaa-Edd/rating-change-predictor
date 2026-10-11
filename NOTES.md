@@ -15,8 +15,7 @@
 - regarding the rate limit imma wait 300ms between each request 
 - there's movies with 0 votes and no rating
 - movies with 0 votes are stored but excluded from predictions, since they have no rating to round
-- first batch of movies and snapshots had 17 movie with 0 votes  (SELECT COUNT(*) FROM snapshots WHERE vote_count = 0;)
-
+- first batch of movies and snapshots had 201 movie with  17 having 0 votes (11/10/2026) 
 
 
 
