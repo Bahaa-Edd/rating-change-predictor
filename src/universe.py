@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 import sqlite3
 from pathlib import Path
 
+from db import get_connection
+
 load_dotenv()
 
 base_url = "https://api.themoviedb.org/3"
@@ -14,9 +16,6 @@ headers = {"Authorization": f"Bearer {os.getenv('TMDB_TOKEN')}"}
 
 DB_PATH = Path("data/market_watch.db")
 
-def get_connection():
-    DB_PATH.parent.mkdir(exist_ok=True)
-    return sqlite3.connect(DB_PATH)
 
 def fetch_page(endpoint, page):
     response = httpx.get(f"{base_url}{endpoint}", headers=headers, params={"page": page}, )

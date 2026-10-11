@@ -12,6 +12,10 @@
 
 - The rate limit is around 40 requests every 10 seconds
 - data from 5:20 and 3:19 are the same that probably comes from no new votes or 2-hours cache
+- regarding the rate limit imma wait 300ms between each request 
+- there's movies with 0 votes and no rating
+- movies with 0 votes are stored but excluded from predictions, since they have no rating to round
+- first batch of movies and snapshots had 17 movie with 0 votes  (SELECT COUNT(*) FROM snapshots WHERE vote_count = 0;)
 
 
 
