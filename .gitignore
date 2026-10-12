@@ -223,3 +223,6 @@ __marimo__/
 
 .idea/
 data/*.db
+
+logs
+run_snapshot.bat
