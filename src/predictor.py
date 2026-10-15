@@ -1,5 +1,5 @@
 from math import ceil
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 HALF_BAND = 0.05
@@ -7,7 +7,7 @@ HALF_BAND = 0.05
 def get_boundaries(avg):
     """Return (displayed, fall_boundary, rise_boundary) for a given average."""
     displayed=round(avg,1)
-    return displayed, round(displayed-0.05, 2), round(displayed+0.05, 2)
+    return displayed, round(displayed-HALF_BAND, 2), round(displayed+HALF_BAND, 2)
 
 
 def votes_to_boundary(avg, votes, new_rating, target):
@@ -42,8 +42,8 @@ def progress_pct(avg):
 def votes_per_hour(votes1, time1, votes2, time2):
     """Return how many votes per hour arrived between two snapshots,
     or None if the time between them is zero or negative."""
-    timedelta= datetime.fromisoformat(time2)-datetime.fromisoformat(time1)
-    deltahours = timedelta.total_seconds()/3600
+    elapsed= datetime.fromisoformat(time2)-datetime.fromisoformat(time1)
+    deltahours = elapsed.total_seconds()/3600
     if(deltahours<=0):
         return None
     return (votes2-votes1)/deltahours
@@ -85,3 +85,17 @@ def hours_to_change(history):
 
     return direction, needed / speed
 
+def last_window(history, hours=24):
+    """Return the snapshots from the last `hours` hours, counted back
+    from the newest snapshot, oldest first."""
+    if not history:
+        return []
+    end = datetime.fromisoformat(history[-1][0])
+    window = []
+    for row in reversed(history):
+        age = end - datetime.fromisoformat(row[0])
+        if age > timedelta(hours=hours):
+            break
+        window.append(row)
+    window.reverse()
+    return window

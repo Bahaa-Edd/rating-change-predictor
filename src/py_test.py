@@ -75,3 +75,29 @@ def test_hours_to_change_no_new_votes():
         ("2026-10-10T10:00:00+00:00", 8.5, 200),
     ]
     assert hours_to_change(history) is None
+
+
+def test_last_window_drops_old_rows():
+    history = [
+        ("2026-10-10T00:00:00+00:00", 8.0, 100),
+        ("2026-10-10T10:00:00+00:00", 8.2, 150),
+        ("2026-10-11T06:00:00+00:00", 8.4, 220),
+    ]
+    window = last_window(history, 24)
+    # newest row is 30h after the first, so the first row drops out
+    assert len(window) == 2
+    assert window[0][2] == 150   # oldest kept row
+    assert window[-1][2] == 220  # newest row
+
+
+def test_last_window_keeps_row_exactly_at_limit():
+    history = [
+        ("2026-10-10T00:00:00+00:00", 8.0, 100),
+        ("2026-10-11T00:00:00+00:00", 8.4, 220),
+    ]
+    # exactly 24h apart: not older than the limit, so it stays
+    assert len(last_window(history, 24)) == 2
+
+
+def test_last_window_empty():
+    assert last_window([], 24) == []
